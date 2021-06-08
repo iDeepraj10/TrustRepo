@@ -46,5 +46,80 @@ df1= df1.fillna(0)
 #    return sim_con
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+#function returns medium value of a service
+def median(service):
+    median_values = df1.median()
+    return median_values[service]
+
+def rating(customer,service):
+    x = np.array(df)
+    return x[custome][service]
+   
+
+#Customers with NaN values along with services
 x = np.argwhere(np.isnan(np.array(df)))
+
+
+#function returns weight of a customer for specific service
+def weight(c,s):
+    Central_point = median(service)
+    Rating = rating(c,s)
+    Weight = (1 - abs((Central_point - Rating))/10)
+    return Weight
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
