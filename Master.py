@@ -23,7 +23,9 @@ def standardize(row):
 
 def get_similar_consumer(c):
     sim_con= similarity_df[c]
-    sim_con= sim_con.sort_values(c,ascending=True)
+    print(sim_con)
+    print(c)
+    sim_con= sim_con.sort_values(axis=c,ascending=True)
     return sim_con.index[1]
 
 
@@ -42,7 +44,7 @@ def predict(C,S):
 
 df = pd.read_csv( "C:\\Users\\dexter\\Desktop\\Trust and Reputation\\New folder\\Dataset\\matrix3.1.csv")
 df1=df
-
+print(df)
 
 df1= df1.fillna(0)
 #print(df1)
