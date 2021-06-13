@@ -14,8 +14,8 @@ def median(service):
     return median_values[service]
 
 def rating(customer,service):
-    x = np.array(df)
-    return x[custome][service]
+    x = np.array(df1)
+    return x[customer][service]
 
 def standardize(row):
     new_row = (row - row.mean())/(row.max()-row.min())
@@ -24,7 +24,7 @@ def standardize(row):
 def get_similar_consumer(c):
     sim_con= similarity_df[c]
     sim_con= sim_con.sort_values(c,ascending=True)
-    return sim_con
+    return sim_con.index[1]
 
 
 #function returns weight of a customer for specific service
@@ -50,6 +50,7 @@ df1= df1.fillna(0)
 
 #Customers with NaN values along with services
 M_ratings = np.argwhere(np.isnan(np.array(df)))
+print(M_ratings)
 
 
 #standardize the dataset 
@@ -62,17 +63,14 @@ similarity= euclidean_distances(df_std)
 #print(similarity)
 
 
-
 similarity_df = pd.DataFrame(similarity)
 #print(similarity_df)
 
 new_df = np.array(df1)
-for customer in M_ratings:
-    for service in customer:
-        temp = get_similar_consumer(customer)
-        print(temp)
-        #x = predict(temp[1],service)
-        #new_df[customer][service] = x    
 
+for rate in M_ratings:
+        temp = get_similar_consumer(rate[0])
+        x = predict(temp,rate[1])       
+        new_df[rate[0]][rate[1]] = x
 
-print(pd.DataFrame(new_df))
+#print(pd.DataFrame(new_df))
