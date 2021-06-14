@@ -14,8 +14,9 @@ from numpy.linalg import norm
 
 #function returns medium value of a service
 def median(service):
-    
-    return 
+    median_values = df.median()
+    x = median_values[service]
+    return x
 
 def rating(customer,service):
     return df1[int(customer)][int(service)]
@@ -61,7 +62,7 @@ def similarity(c1,c2):
 
     cos_sim = dot(cmp_set1,cmp_set2)/(norm(cmp_set1)*norm(cmp_set2))
     return cos_sim  
-"""
+
 for rate in M_ratings:
     sim_mat = {}
     for cus in df1:
@@ -72,11 +73,10 @@ for rate in M_ratings:
     res = predict(sim_cus[0],rate[1])
     df1[rate[0]][rate[1]] = res
 
-"""
 
 
 
 
-
-
-#print(pd.DataFrame())
+#print(pd.DataFrame(df1))
+new =  np.argwhere(np.isnan(np.array(df1)))
+print(new)
