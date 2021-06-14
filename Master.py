@@ -5,6 +5,7 @@ import pandas as pd
 import numpy as np
 from scipy import sparse
 from scipy.spatial import distance
+from scipy import stats
 from sklearn.metrics.pairwise import cosine_similarity
 from sklearn.metrics.pairwise import euclidean_distances
 from numpy import dot
@@ -13,12 +14,11 @@ from numpy.linalg import norm
 
 #function returns medium value of a service
 def median(service):
-    median_values = df1.median()
-    return median_values[service]
+    
+    return 
 
 def rating(customer,service):
-    x = np.array(df1)
-    return x[customer][service]
+    return df1[int(customer)][int(service)]
 
 
 #function returns weight of a customer for specific service
@@ -61,23 +61,22 @@ def similarity(c1,c2):
 
     cos_sim = dot(cmp_set1,cmp_set2)/(norm(cmp_set1)*norm(cmp_set2))
     return cos_sim  
-
+"""
 for rate in M_ratings:
+    sim_mat = {}
     for cus in df1:
-        sim_mat = {}
         x = similarity(rate[0],int(cus[0]))
-        sim_mat[cus[0]] = x
-    print(sim_mat)
+        #print(int(cus[0])," ",x)
+        sim_mat.update({cus[0] : x })
+    sim_cus = min(sim_mat.items(), key=lambda x: x[1])
+    res = predict(sim_cus[0],rate[1])
+    df1[rate[0]][rate[1]] = res
+
+"""
 
 
 
 
 
 
-
-
-
-
-#print(pd.DataFrame(new_df))
-
-
+#print(pd.DataFrame())
