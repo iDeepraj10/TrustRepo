@@ -7,7 +7,8 @@ from scipy import sparse
 from scipy.spatial import distance
 from sklearn.metrics.pairwise import cosine_similarity
 from sklearn.metrics.pairwise import euclidean_distances
-
+from numpy import dot
+from numpy.linalg import norm
 #function returns medium value of a service
 def median(service):
     median_values = df1.median()
@@ -16,17 +17,6 @@ def median(service):
 def rating(customer,service):
     x = np.array(df1)
     return x[customer][service]
-
-def standardize(row):
-    new_row = (row - row.mean())/(row.max()-row.min())
-    return new_row    
-
-def get_similar_consumer(c):
-    sim_con= similarity_df[c]
-    print(sim_con)
-    print(c)
-    sim_con= sim_con.sort_values(axis=c,ascending=True)
-    return sim_con.index[1]
 
 
 #function returns weight of a customer for specific service
@@ -43,36 +33,36 @@ def predict(C,S):
     return M_rate
 
 df = pd.read_csv( "C:\\Users\\dexter\\Desktop\\Trust and Reputation\\New folder\\Dataset\\matrix3.1.csv")
-df1=df
-print(df)
+#print(df)
 
-df1= df1.fillna(0)
-#print(df1)
-
+df1 = np.array(df)
 
 #Customers with NaN values along with services
 M_ratings = np.argwhere(np.isnan(np.array(df)))
-print(M_ratings)
+#print(M_ratings)
+
+#get similarity for two customers
+def similarity(c1,c2):
+    temp_set = []
+    count = -1
+    for i,j in zip(df1[3],df1[2]): 
+        count+=1  
+        if np.isnan(i) or np.isnan(j):
+            continue
+        temp_set.append(count)
+
+    cmp_set1 = []
+    cmp_set2 = []
+    for i in temp_set:
+        cmp_set1.append(df1[3][i])    
+        cmp_set2.append(df1[2][i])
+
+    cos_sim = dot(cmp_set1,cmp_set2)/(norm(cmp_set1)*norm(cmp_set2))
+    print(cos_sim)  
 
 
-#standardize the dataset 
 
-df_std = df1.apply(standardize)
-#print(df_std)
-
-#find similarity matrix
-similarity= euclidean_distances(df_std)
-#print(similarity)
-
-
-similarity_df = pd.DataFrame(similarity)
-#print(similarity_df)
-
-new_df = np.array(df1)
-
-for rate in M_ratings:
-        temp = get_similar_consumer(rate[0])
-        x = predict(temp,rate[1])       
-        new_df[rate[0]][rate[1]] = x
-
+     
 #print(pd.DataFrame(new_df))
+
+
