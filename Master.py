@@ -9,6 +9,8 @@ from sklearn.metrics.pairwise import cosine_similarity
 from sklearn.metrics.pairwise import euclidean_distances
 from numpy import dot
 from numpy.linalg import norm
+
+
 #function returns medium value of a service
 def median(service):
     median_values = df1.median()
@@ -45,7 +47,7 @@ M_ratings = np.argwhere(np.isnan(np.array(df)))
 def similarity(c1,c2):
     temp_set = []
     count = -1
-    for i,j in zip(df1[3],df1[2]): 
+    for i,j in zip(df1[c1],df1[c2]): 
         count+=1  
         if np.isnan(i) or np.isnan(j):
             continue
@@ -54,15 +56,28 @@ def similarity(c1,c2):
     cmp_set1 = []
     cmp_set2 = []
     for i in temp_set:
-        cmp_set1.append(df1[3][i])    
-        cmp_set2.append(df1[2][i])
+        cmp_set1.append(df1[c1][i])    
+        cmp_set2.append(df1[c2][i])
 
     cos_sim = dot(cmp_set1,cmp_set2)/(norm(cmp_set1)*norm(cmp_set2))
-    print(cos_sim)  
+    return cos_sim  
+
+for rate in M_ratings:
+    for cus in df1:
+        sim_mat = {}
+        x = similarity(rate[0],int(cus[0]))
+        sim_mat[cus[0]] = x
+    print(sim_mat)
 
 
 
-     
+
+
+
+
+
+
+
 #print(pd.DataFrame(new_df))
 
 
