@@ -25,14 +25,17 @@ def rating(customer,service):
 #function returns weight of a customer for specific service
 def weight(c,s):
     Central_point = median(s)
+    #print(Central_point)
     Rating = rating(c,s)
     Weight = (1 - abs((Central_point - Rating))/10)
+    #print(Weight," ",Central_point," ",Rating," of :",c," ",s)
     return Weight
 
 def predict(C,S):
     W = weight(C,S)
     R = rating(C,S)
     M_rate = W * R 
+    #print(W," ",R," ",M_rate)
     return M_rate
 
 df = pd.read_csv( "C:\\Users\\dexter\\Desktop\\Trust and Reputation\\New folder\\Dataset\\matrix3.1.csv")
@@ -67,16 +70,16 @@ for rate in M_ratings:
     sim_mat = {}
     for cus in df1:
         x = similarity(rate[0],int(cus[0]))
-        #print(int(cus[0])," ",x)
         sim_mat.update({cus[0] : x })
     sim_cus = min(sim_mat.items(), key=lambda x: x[1])
     res = predict(sim_cus[0],rate[1])
+    res = round(res)
+    print(res)
     df1[rate[0]][rate[1]] = res
-
-
-
+    #print(rate[0]," ",rate[1]," ",res,"Most similar : ",sim_cus[0])
 
 
 #print(pd.DataFrame(df1))
-new =  np.argwhere(np.isnan(np.array(df1)))
-print(new)
+
+M_ratings = np.argwhere(np.isnan(np.array(df1)))
+#print(M_ratings)
