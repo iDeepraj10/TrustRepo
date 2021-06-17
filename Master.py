@@ -10,6 +10,7 @@ from sklearn.metrics.pairwise import cosine_similarity
 from sklearn.metrics.pairwise import euclidean_distances
 from numpy import dot
 from numpy.linalg import norm
+import csv
 
 
 #function returns medium value of a service
@@ -28,14 +29,14 @@ def weight(c,s):
     #print(Central_point)
     Rating = rating(c,s)
     Weight = (1 - abs((Central_point - Rating))/10)
-    #print(Weight," ",Central_point," ",Rating," of :",c," ",s)
+    print(Weight," ",Central_point," ",Rating," of :",c," ",s)
     return Weight
 
 def predict(C,S):
     W = weight(C,S)
     R = rating(C,S)
     M_rate = W * R 
-    #print(W," ",R," ",M_rate)
+    print(W," ",R," ",M_rate)
     return M_rate
 
 df = pd.read_csv( "C:\\Users\\dexter\\Desktop\\Trust and Reputation\\New folder\\Dataset\\matrix3.1.csv")
@@ -45,7 +46,7 @@ df1 = np.array(df)
 
 #Customers with NaN values along with services
 M_ratings = np.argwhere(np.isnan(np.array(df)))
-#print(M_ratings)
+print(M_ratings)
 
 #get similarity for two customers
 def similarity(c1,c2):
@@ -65,21 +66,29 @@ def similarity(c1,c2):
 
     cos_sim = dot(cmp_set1,cmp_set2)/(norm(cmp_set1)*norm(cmp_set2))
     return cos_sim  
-
+res = 0
+sum1 = 0
 for rate in M_ratings:
     sim_mat = {}
     for cus in df1:
         x = similarity(rate[0],int(cus[0]))
         sim_mat.update({cus[0] : x })
-    sim_cus = min(sim_mat.items(), key=lambda x: x[1])
-    res = predict(sim_cus[0],rate[1])
-    res = round(res)
-    print(res)
-    df1[rate[0]][rate[1]] = res
-    #print(rate[0]," ",rate[1]," ",res,"Most similar : ",sim_cus[0])
+    sim_cus =  dict(sorted(sim_mat.items(), key=lambda item: item[1]))
+    count = 0
+    for i in sim_cus:
+            count+=1
+            res = predict(i,rate[1])
+            if np.isnan(res):
+                continue   
+            sum1 = sum1 + res     
+            print('Rate of ',i,' is :',sum1)
+            if count == 10:
+                break
+    sum1 = sum1/10
+    sum1 = round(sum1)
+    df1[rate[0]][rate[1]] = sum1
+    print(rate[0]," ",rate[1]," ",sum1)
 
 
-#print(pd.DataFrame(df1))
-
-M_ratings = np.argwhere(np.isnan(np.array(df1)))
-#print(M_ratings)
+print(pd.DataFrame(df1))
+pd.DataFrame(df1).to_csv("C:\\Users\\dexter\\Desktop\\Trust and Reputation\\New folder\\Dataset\\Predicted_data3.1.csv")
