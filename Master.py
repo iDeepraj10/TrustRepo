@@ -28,15 +28,15 @@ def weight(c,s):
     Central_point = median(s)
     #print(Central_point)
     Rating = rating(c,s)
-    Weight = (1 - abs((Central_point - Rating))/10)
-    print(Weight," ",Central_point," ",Rating," of :",c," ",s)
+    Weight = 1 - abs((Central_point - Rating))/10
+    #print(Weight," ",Central_point," ",Rating," of :",c," ",s)
     return Weight
 
 def predict(C,S):
     W = weight(C,S)
     R = rating(C,S)
     M_rate = W * R 
-    print(W," ",R," ",M_rate)
+    #print(W," ",R," ",M_rate)
     return M_rate
 
 df = pd.read_csv( "C:\\Users\\dexter\\Desktop\\Trust and Reputation\\New folder\\Dataset\\matrix3.1.csv")
@@ -81,13 +81,14 @@ for rate in M_ratings:
             if np.isnan(res):
                 continue   
             sum1 = sum1 + res     
-            print('Rate of ',i,' is :',sum1)
-            if count == 10:
+            #print('Rate of ',i,' is :',sum1," and count is : ",count)
+            if count >= 10:
                 break
     sum1 = sum1/10
     sum1 = round(sum1)
     df1[rate[0]][rate[1]] = sum1
-    print(rate[0]," ",rate[1]," ",sum1)
+    #print(rate[0]," ",rate[1]," ",sum1)
+    #print("----------------------------------------------------")
 
 
 print(pd.DataFrame(df1))
