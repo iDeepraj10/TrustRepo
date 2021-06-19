@@ -16,7 +16,7 @@ with open('matrix2.csv','w', newline='', encoding='utf-8') as f:
                 rate=rate+1
                 continue
             col.append(abs(random.choice([ele for ele in range(rate-3,rate+3) if ele !=0 if ele <=10])))
-            if(count%10==0):
+            if(count%100==0):
                 rate=rate+1
             count=count+1    
         arr.append(col)
