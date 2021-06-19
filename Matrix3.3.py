@@ -10,5 +10,6 @@ df = pd.read_csv("C:\\Users\\dexter\\Desktop\\Trust and Reputation\\New folder\\
 
 
 df1 = df.mask(np.random.random(df.shape) < .3)
+print(df1)
 
 df1.to_csv("C:\\Users\\dexter\\Desktop\\Trust and Reputation\\New folder\\Dataset\\matrix3.3.csv")  

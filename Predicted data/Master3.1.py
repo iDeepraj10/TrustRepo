@@ -76,11 +76,11 @@ for rate in M_ratings:
     sim_cus =  dict(sorted(sim_mat.items(), key=lambda item: item[1]))
     count = 0
     for i in sim_cus:
-            count+=1
             res = predict(i,rate[1])
             if np.isnan(res):
                 continue   
-            sum1 = sum1 + res     
+            sum1 = sum1 + res
+            count+=1     
             #print('Rate of ',i,' is :',sum1," and count is : ",count)
             if count >= 10:
                 break

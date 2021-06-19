@@ -39,7 +39,7 @@ def predict(C,S):
     #print(W," ",R," ",M_rate)
     return M_rate
 
-df = pd.read_csv( "C:\\Users\\dexter\\Desktop\\Trust and Reputation\\New folder\\Dataset\\matrix3.1.csv")
+df = pd.read_csv( "C:\\Users\\dexter\\Desktop\\Trust and Reputation\\New folder\\Dataset\\matrix3.4.csv")
 #print(df)
 
 df1 = np.array(df)
@@ -76,11 +76,11 @@ for rate in M_ratings:
     sim_cus =  dict(sorted(sim_mat.items(), key=lambda item: item[1]))
     count = 0
     for i in sim_cus:
-            count+=1
             res = predict(i,rate[1])
             if np.isnan(res):
                 continue   
-            sum1 = sum1 + res     
+            sum1 = sum1 + res
+            count+=1     
             #print('Rate of ',i,' is :',sum1," and count is : ",count)
             if count >= 10:
                 break
@@ -92,4 +92,4 @@ for rate in M_ratings:
 
 
 print(pd.DataFrame(df1))
-pd.DataFrame(df1).to_csv("C:\\Users\\dexter\\Desktop\\Trust and Reputation\\New folder\\Dataset\\Predicted data\\Predicted_data3.1.csv")
+pd.DataFrame(df1).to_csv("C:\\Users\\dexter\\Desktop\\Trust and Reputation\\New folder\\Dataset\\Predicted data\\Predicted_data3.4.csv")
