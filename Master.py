@@ -65,8 +65,8 @@ def similarity(c1,c2):
         cmp_set1.append(df1[c1][i])    
         cmp_set2.append(df1[c2][i])
 
-    cos_sim = dot(cmp_set1,cmp_set2)/(norm(cmp_set1)*norm(cmp_set2))
-    return cos_sim  
+    cos_sim = np.corrcoef(cmp_set1, cmp_set2)
+    return cos_sim[0,1]  
 res = 0
 sum1 = 0
 for rate in M_ratings:

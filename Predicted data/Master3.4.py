@@ -11,6 +11,7 @@ from sklearn.metrics.pairwise import euclidean_distances
 from numpy import dot
 from numpy.linalg import norm
 import csv
+import math
 
 
 #function returns medium value of a service
@@ -24,7 +25,7 @@ def rating(customer,service):
 
 
 #function returns weight of a customer for specific service
-def weight(c,s):
+def loc_weight(c,s):
     Central_point = median(s)
     #print(Central_point)
     Rating = rating(c,s)
@@ -32,21 +33,28 @@ def weight(c,s):
     #print(Weight," ",Central_point," ",Rating," of :",c," ",s)
     return Weight
 
+def glob_weight():
+    sum1 = 0
+    count = 0
+    for c in range(0,99):
+        for cus in df1:
+            wl = loc_weight(c,int(cus[0]+1))
+            if math.isnan(wl):
+                wl = 0
+                continue
+            #print("loc weight for ",cus[0]," of ",c," is ",wl)
+            sum1 = sum1 + wl
+            count = count + 1
+            res = sum1/count
+        g_wg.update({c : res})    
+    return 0     
+
 def predict(C,S):
-    W = weight(C,S)
+    W = g_wg[C]
     R = rating(C,S)
-    M_rate = W * R 
-    #print(W," ",R," ",M_rate)
+    M_rate = k*(loc_weight(C,S)*R) + ((1-k)*(g_wg[C]*R))
+    print(W," ",R," ",M_rate)
     return M_rate
-
-df = pd.read_csv( "C:\\Users\\dexter\\Desktop\\Trust and Reputation\\New folder\\Dataset\\matrix3.4.csv")
-#print(df)
-
-df1 = np.array(df)
-
-#Customers with NaN values along with services
-M_ratings = np.argwhere(np.isnan(np.array(df)))
-print(M_ratings)
 
 #get similarity for two customers
 def similarity(c1,c2):
@@ -66,6 +74,22 @@ def similarity(c1,c2):
 
     cos_sim = dot(cmp_set1,cmp_set2)/(norm(cmp_set1)*norm(cmp_set2))
     return cos_sim  
+
+
+df = pd.read_csv( "C:\\Users\\dexter\\Desktop\\Trust and Reputation\\New folder\\Dataset\\matrix3.2.csv")
+#print(df)
+
+
+g_wg = {}
+df1 = np.array(df)
+glob_weight()
+print("Global Weight Matrix created")
+k =0
+
+#Customers with NaN values along with services
+M_ratings = np.argwhere(np.isnan(np.array(df)))
+#print(M_ratings)
+
 res = 0
 sum1 = 0
 for rate in M_ratings:
@@ -75,6 +99,7 @@ for rate in M_ratings:
         sim_mat.update({cus[0] : x })
     sim_cus =  dict(sorted(sim_mat.items(), key=lambda item: item[1]))
     count = 0
+    print("Prediction ---> ",rate[0])
     for i in sim_cus:
             res = predict(i,rate[1])
             if np.isnan(res):
@@ -87,9 +112,9 @@ for rate in M_ratings:
     sum1 = sum1/10
     sum1 = round(sum1)
     df1[rate[0]][rate[1]] = sum1
-    #print(rate[0]," ",rate[1]," ",sum1)
-    #print("----------------------------------------------------")
+    print(rate[0]," ",rate[1]," ",sum1)
+    print("-----------------------------------")
 
 
 print(pd.DataFrame(df1))
-pd.DataFrame(df1).to_csv("C:\\Users\\dexter\\Desktop\\Trust and Reputation\\New folder\\Dataset\\Predicted data\\Predicted_data3.4.csv")
+pd.DataFrame(df1).to_csv("C:\\Users\\dexter\\Desktop\\Trust and Reputation\\New folder\\Dataset\\Predicted data\\Predicted_data3.2.csv")
