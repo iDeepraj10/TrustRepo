@@ -76,7 +76,7 @@ def similarity(c1,c2):
     return cos_sim  
 
 
-df = pd.read_csv( "C:\\Users\\dexter\\Desktop\\Trust and Reputation\\New folder\\Dataset\\matrix3.2.csv")
+df = pd.read_csv( "C:\\Users\\dexter\\Desktop\\Trust and Reputation\\New folder\\Dataset\\matrix3.1.csv")
 #print(df)
 
 
@@ -84,7 +84,7 @@ g_wg = {}
 df1 = np.array(df)
 glob_weight()
 print("Global Weight Matrix created")
-k =0
+k =0.25
 
 #Customers with NaN values along with services
 M_ratings = np.argwhere(np.isnan(np.array(df)))
@@ -117,4 +117,4 @@ for rate in M_ratings:
 
 
 print(pd.DataFrame(df1))
-pd.DataFrame(df1).to_csv("C:\\Users\\dexter\\Desktop\\Trust and Reputation\\New folder\\Dataset\\Predicted data\\Predicted_data3.2.csv")
+pd.DataFrame(df1).to_csv("C:\\Users\\dexter\\Desktop\\Trust and Reputation\\New folder\\Dataset\\Predicted data\\Predicted_data3.1.csv")

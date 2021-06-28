@@ -7,7 +7,7 @@ with open('matrix2.csv','w', newline='', encoding='utf-8') as f:
     count=1
  
     arr=[]
-    for i in range(100):
+    for i in range(101):
         col = [] 
         rate=1
         for j in range(100):
