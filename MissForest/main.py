@@ -1,19 +1,11 @@
 import numpy as np
 import pandas as pd
 import csv
-from missingpy import MissForest
+import random
 
+col = 10
 
-df_org = pd.read_csv("C:\\Users\\dexter\\Desktop\\Trust and Reputation\\New folder\\Dataset\\matrix2.csv")
+arr_r = random.choice([ele for ele in range(1,11) if ele not in range(col-2,col+3)])
+print([ele for ele in range(1,11) if ele not in range(col-2,col+3)])
 
-df_null = pd.read_csv("C:\\Users\\dexter\\Desktop\\Trust and Reputation\\New folder\\Dataset\\matrix3.1.csv")
-
-print(df_null.isnull().sum())
-M_ratings = np.argwhere(np.isnan(np.array(df)))
-
-# Make an instance and perform the imputation
-imputer = MissForest()
-
-for rate in M_ratings:
-	X = df_org.drop(rate[1], axis=1)
-	X_imputed = imputer.fit_transform(X)
+print(arr_r)

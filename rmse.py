@@ -4,7 +4,7 @@ import pandas as pd
 from statistics import mean
 import math
 
-actual = pd.read_csv( "C:\\Users\\dexter\\Desktop\\Trust and Reputation\\New folder\\Dataset\\matrix1.csv")
+actual = pd.read_csv( "C:\\Users\\dexter\\Desktop\\Trust and Reputation\\New folder\\Dataset\\test.csv")
 predicted = pd.read_csv("C:\\Users\\dexter\\Desktop\\Trust and Reputation\\New folder\\Dataset\\Predicted data\\Predicted_data4.1.csv")
 df =  pd.read_csv( "C:\\Users\\dexter\\Desktop\\Trust and Reputation\\New folder\\Dataset\\matrix4.1.csv")
 
@@ -16,6 +16,7 @@ predicted = np.array(predicted)
 
 
 M_ratings = np.argwhere(np.isnan(np.array(df)))
+
 
 rmse = []
 for rate in M_ratings:

@@ -1,6 +1,6 @@
 import csv
 
-with open('matrix1.csv','w', newline='', encoding='utf-8') as f:
+with open('matrix A.csv','w', newline='', encoding='utf-8') as f:
     writer = csv.writer(f)
     count=1
  
