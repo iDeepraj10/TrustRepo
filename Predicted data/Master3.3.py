@@ -16,8 +16,8 @@ import math
 
 #function returns medium value of a service
 def median(service):
-    median_values = df.median()
-    x = median_values[service]
+    median_values = df.median()  #get median values for all services
+    x = median_values[service]   #store median value for <service> in x
     return x
 
 def rating(customer,service):
@@ -27,9 +27,9 @@ def rating(customer,service):
 
 #function returns weight of a customer for specific service
 def loc_weight(c,s):
-    Central_point = median(s)
+    Central_point = median(s)       #get median of <s>
     #print(Central_point)
-    Rating = rating(c,s)
+    Rating = rating(c,s)            #return 
     Weight = 1 - abs((Central_point - Rating))/10
     #print(Weight," ",Central_point," ",Rating," of :",c," ",s)
     return Weight
@@ -37,9 +37,9 @@ def loc_weight(c,s):
 def glob_weight():
     sum1 = 0
     count = 0
-    for c1 in range(0,100):
-        for cus in df1:
-            wl = loc_weight(c1,int(cus[0]+1))
+    for c1 in range(0,100):                         #iterate from 0 to 99
+        for cus in df1:                             #
+            wl = loc_weight(c1,int(cus[0]+1))       #local
             if math.isnan(wl):
                 wl = 0
                 continue
@@ -76,16 +76,15 @@ def similarity(c1,c2):
     cos_sim = np.corrcoef(cmp_set1, cmp_set2)
     return cos_sim[0,1]  
 
-
-df = pd.read_csv( "C:\\Users\\dexter\\Desktop\\Trust and Reputation\\New folder\\Dataset\\matrix4.1.csv")
+#Load the dataset
+df = pd.read_csv( "C:\\Users\\dexter\\Desktop\\Trust and Reputation\\New folder\\Dataset\\matrix C.csv")
 #print(df)
-#new_df = df.drop(df.columns[[0]], axis=1)
-
-g_wg = {}
-df1 = np.array(df)
-glob_weight()
-print("Global Weight Matrix created")
-k =0.25
+ 
+g_wg = {}                                           #create an empty dictionary to store global weights  
+df1 = np.array(df)                                  #convert pandas dataframe to np array
+glob_weight()                                       #calulating global weights
+print("Global Weight Matrix created")               
+k =0.25                 
 
 #Customers with NaN values along with services
 M_ratings = np.argwhere(np.isnan(np.array(df)))
@@ -110,9 +109,11 @@ for rate in M_ratings:
             #print('Rate of ',i,' is :',sum1," and count is : ",count)
             if count >= 10:
                 break
-    sum1 = int(sum1/10)
-    #sum1 = round(sum1)
-    df1[rate[0]][rate[1]] = int(sum1)
+    sum1 = (sum1/10)
+    sum1 = round(sum1,2)
+    if sum1 > 10:
+        sum1 = 10
+    df1[rate[0]][rate[1]] = sum1
     print(rate[0]," ",rate[1]," ",sum1)
     print("-----------------------------------")
 
