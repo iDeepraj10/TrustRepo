@@ -7,7 +7,7 @@ import random
 df = pd.read_csv("C:\\Users\\dexter\\Desktop\\Trust and Reputation\\New folder\\Dataset\\matrix A.csv")
 count = 1
 ix = [(row, col) for row in range(df.shape[0]) for col in range(df.shape[1])]
-for row, col in random.sample(ix, int(round(.1*len(ix)))):
+for row, col in random.sample(ix, int(round(.5*len(ix)))):
     if col in range(1,11):
         count = 1
     elif col in range(11,21):
@@ -32,7 +32,7 @@ for row, col in random.sample(ix, int(round(.1*len(ix)))):
 
 df.to_csv("C:\\Users\\dexter\\Desktop\\Trust and Reputation\\New folder\\Dataset\\matrix B.csv")
 
-df1 = df.mask(np.random.random(df.shape) < .4)
+df1 = df.mask(np.random.random(df.shape) < .5)
 print(df1)
 
 df1.to_csv("C:\\Users\\dexter\\Desktop\\Trust and Reputation\\New folder\\Dataset\\matrix C.csv")  

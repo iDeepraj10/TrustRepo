@@ -4,18 +4,20 @@ import pandas as pd
 from statistics import mean
 import math
 
-df = pd.read_csv( "C:\\Users\\dexter\\Desktop\\Trust and Reputation\\New folder\\Dataset\\matrix C.csv")
-predicted = pd.read_csv("C:\\Users\\dexter\\Desktop\\Trust and Reputation\\New folder\\Dataset\\Predicted data\\Predicted_data4.1.csv")
-actual =  pd.read_csv( "C:\\Users\\dexter\\Desktop\\Trust and Reputation\\New folder\\Dataset\\matrix B.csv")
+df = pd.read_csv( "C:\\Users\\dexter\\Desktop\\Trust and Reputation\\New folder\\Dataset\\Muvi\\mvi_lens_missing.csv")
+predicted = pd.read_csv("C:\\Users\\dexter\\Desktop\\Trust and Reputation\\New folder\\Dataset\\Muvi\\Predicted Data.csv")
+actual =  pd.read_csv( "C:\\Users\\dexter\\Desktop\\Trust and Reputation\\New folder\\Dataset\\Muvi\\mvi_lens.csv")
 
 predicted = predicted.drop(predicted.columns[[0]], axis=1)
-predicted = predicted.drop(predicted.columns[[0]], axis=1)
 actual = actual.drop(actual.columns[[0]], axis =1)
+
+
 
 print(actual)
 print(predicted)
 actual = np.array(actual)
 predicted = np.array(predicted)
+
 
 M_ratings = np.argwhere(np.isnan(np.array(df)))
 
