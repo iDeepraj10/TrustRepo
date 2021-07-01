@@ -39,41 +39,46 @@ def glob_weight():
     count = 0
     for c1 in range(0,100):                         #iterate from 0 to 99
         for cus in df1:                             #
-            wl = loc_weight(c1,int(cus[0]+1))       #local
-            if math.isnan(wl):
+            wl = loc_weight(c1,int(cus[0]+1))       #get local weight for every user
+            if math.isnan(wl):                      #if value is nan then ignore
                 wl = 0
                 continue
             #print("loc weight for ",cus[0]," of ",c1," is ",wl)
             sum1 = sum1 + wl
             count = count + 1
             res = sum1/count
-        g_wg.update({c1 : res})    
+        g_wg.update({c1 : res})                     #adding the weight to a dictionary in a key-value format
     return 0     
 
-def predict(C,S):
-    W = g_wg[C]
+def predict_global(C,S):
     R = rating(C,S)
-    M_rate = k*(loc_weight(C,S)*R) + ((1-k)*(g_wg[C]*R))
+    M_rate = g_wg[C]*R
+    #print(W," ",R," ",M_rate)
+    return M_rate
+
+def predict_local(C,S):
+    R = rating(C,S)
+    M_rate = loc_weight(C,S)*R 
     #print(W," ",R," ",M_rate)
     return M_rate
 
 #get similarity for two customers
 def similarity(c1,c2):
-    temp_set = []
-    count = -1
-    for i,j in zip(df1[c1],df1[c2]): 
-        count+=1  
-        if np.isnan(i) or np.isnan(j):
+    temp_set = []                       #temporary empty set
+    count = -1                          #count keeps track of services not having null
+    for i,j in zip(df1[c1],df1[c2]):    #iterate over values of user c1 and user c2 with i and j respectively
+        count+=1                        
+        if np.isnan(i) or np.isnan(j):  
             continue
-        temp_set.append(count)
+        temp_set.append(count)          #store the service number if both user have rated that service
 
-    cmp_set1 = []
-    cmp_set2 = []
+    cmp_set1 = []                       
+    cmp_set2 = []                       #Two empty set to compare the ratings of c1 and c2
     for i in temp_set:
         cmp_set1.append(df1[c1][i])    
         cmp_set2.append(df1[c2][i])
 
-    cos_sim = np.corrcoef(cmp_set1, cmp_set2)
+    cos_sim = np.corrcoef(cmp_set1, cmp_set2)       #get the similarity between two users using pearson's coefficient
     return cos_sim[0,1]  
 
 #Load the dataset
@@ -84,37 +89,48 @@ g_wg = {}                                           #create an empty dictionary 
 df1 = np.array(df)                                  #convert pandas dataframe to np array
 glob_weight()                                       #calulating global weights
 print("Global Weight Matrix created")               
-k =0.25                 
+k =0.25                
 
-#Customers with NaN values along with services
-M_ratings = np.argwhere(np.isnan(np.array(df)))
+
+
+M_ratings = np.argwhere(np.isnan(np.array(df)))     #Locations of NaN values
 #print(M_ratings)
 
-res = 0
-sum1 = 0
-for rate in M_ratings:
-    sim_mat = {}
-    for cus in df1:
-        x = similarity(rate[0],int(cus[0]))
-        sim_mat.update({cus[0] : x })
-    sim_cus =  dict(sorted(sim_mat.items(), key=lambda item: item[1]))
+
+for rate in M_ratings:                              #iterate over nan locations
+    res_loc = 0
+    res_glo = 0
+    sum_loc = 0
+    sum_glo = 0
+    tot_sum = 0
+    sim_mat = {}                                    #empty dictionary for similarity matrix 
+    for cus in df1:                                 #get the similarity for all user in M_ratings
+        x = similarity(rate[0],int(cus[0]))         #with every other user in the dataset   
+        sim_mat.update({cus[0] : x })               #update the similarity scores in dictionary sim_mat
+    sim_cus =  dict(sorted(sim_mat.items(), key=lambda item: item[1] , reverse = True))      #sort the dictionary in descending order
+    del sim_cus[rate[0]]
     count = 0
     print("Prediction ---> ",rate[0])
-    for i in sim_cus:
-            res = predict(i,rate[1])
-            if np.isnan(res):
+    for i in sim_cus:                           #iterate over the sorted similar users upto count(count = 10)
+            res_loc = predict_local(i,rate[1])
+            print("Local prediction --->",res_loc)                              #predicting rate using user and service
+            res_glo = predict_global(i,rate[1])
+            print("Global prediction--->",res_glo)
+            if np.isnan(res_loc) or np.isnan(res_glo):                   #if rate is nan then ignore rest
+                print("****ignore values****")
                 continue   
-            sum1 = sum1 + res
-            count+=1     
-            #print('Rate of ',i,' is :',sum1," and count is : ",count)
+            sum_loc = sum_loc + res_loc
+            sum_glo = sum_glo + res_glo
+            count+=1
+            print(i)     
+            print("count is : ",count,"Sum of local-->",sum_loc,"Sum of global--->",sum_glo)
             if count >= 10:
                 break
-    sum1 = (sum1/10)
-    sum1 = round(sum1,2)
-    if sum1 > 10:
-        sum1 = 10
-    df1[rate[0]][rate[1]] = sum1
-    print(rate[0]," ",rate[1]," ",sum1)
+    tot_sum = ((k*sum_loc/10) + (1-k)*sum_glo/10)
+    tot_sum = round(tot_sum,2)
+    
+    df1[rate[0]][rate[1]] = tot_sum
+    print(rate[0]," ",rate[1]," ",tot_sum)
     print("-----------------------------------")
 
 

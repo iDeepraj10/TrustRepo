@@ -3,8 +3,6 @@ import numpy as np
 import csv
 import random
 
-with open('matrix4.1.csv','w', newline='', encoding='utf-8') as f:
-    writer = csv.writer(f)
 
 df = pd.read_csv("C:\\Users\\dexter\\Desktop\\Trust and Reputation\\New folder\\Dataset\\matrix A.csv")
 count = 1
