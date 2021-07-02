@@ -62,6 +62,13 @@ df.to_csv("C:\\Users\\dexter\\Desktop\\Trust and Reputation\\New folder\\Dataset
 
 
 df1 = df.mask(np.random.random(df.shape) < .1)
-print(df1)
+df2 = df.mask(np.random.random(df.shape) < .2)
+df3 = df.mask(np.random.random(df.shape) < .3)
+df4 = df.mask(np.random.random(df.shape) < .4)
+df5 = df.mask(np.random.random(df.shape) < .5)
 
 df1.to_csv("C:\\Users\\dexter\\Desktop\\Trust and Reputation\\New folder\\Dataset\\Sub+mal\\missing10_s5_m5.csv")  
+df2.to_csv("C:\\Users\\dexter\\Desktop\\Trust and Reputation\\New folder\\Dataset\\Sub+mal\\missing20_s5_m5.csv")
+df3.to_csv("C:\\Users\\dexter\\Desktop\\Trust and Reputation\\New folder\\Dataset\\Sub+mal\\missing30_s5_m5.csv")
+df4.to_csv("C:\\Users\\dexter\\Desktop\\Trust and Reputation\\New folder\\Dataset\\Sub+mal\\missing40_s5_m5.csv")
+df5.to_csv("C:\\Users\\dexter\\Desktop\\Trust and Reputation\\New folder\\Dataset\\Sub+mal\\missing50_s5_m5.csv")

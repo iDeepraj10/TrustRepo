@@ -9,7 +9,7 @@ df = pd.read_csv("C:\\Users\\dexter\\Desktop\\Trust and Reputation\\New folder\\
 
 count =1
 ix = [(row, col) for row in range(df.shape[0]) for col in range(df.shape[1])]
-for row, col in random.sample(ix, int(round(.10*len(ix)))):
+for row, col in random.sample(ix, int(round(.25*len(ix)))):
     if col in range(0,11):
         count = 1
     elif col in range(11,21):
@@ -35,7 +35,7 @@ for row, col in random.sample(ix, int(round(.10*len(ix)))):
 
 count = 1
 ix = [(row, col) for row in range(df.shape[0]) for col in range(df.shape[1])]
-for row, col in random.sample(ix, int(round(.10*len(ix)))):
+for row, col in random.sample(ix, int(round(.25*len(ix)))):
     if col in range(1,11):
         count = 1
     elif col in range(11,21):
@@ -58,8 +58,7 @@ for row, col in random.sample(ix, int(round(.10*len(ix)))):
         count = 10                                    
     df.iat[row, col] = random.choice([ele for ele in range(1,11) if ele not in range(count-2,count+3) if ele <11 if ele >0])
 
-df.to_csv("C:\\Users\\dexter\\Desktop\\Trust and Reputation\\New folder\\Dataset\\Sub+mal\\s10_m10.csv")
-
+df.to_csv("C:\\Users\\dexter\\Desktop\\Trust and Reputation\\New folder\\Dataset\\Sub+mal\\s25_m25.csv")
 
 
 df1 = df.mask(np.random.random(df.shape) < .1)
@@ -68,8 +67,8 @@ df3 = df.mask(np.random.random(df.shape) < .3)
 df4 = df.mask(np.random.random(df.shape) < .4)
 df5 = df.mask(np.random.random(df.shape) < .5)
 
-df1.to_csv("C:\\Users\\dexter\\Desktop\\Trust and Reputation\\New folder\\Dataset\\Sub+mal\\missing10_s10_m10.csv")  
-df2.to_csv("C:\\Users\\dexter\\Desktop\\Trust and Reputation\\New folder\\Dataset\\Sub+mal\\missing20_s10_m10.csv")
-df3.to_csv("C:\\Users\\dexter\\Desktop\\Trust and Reputation\\New folder\\Dataset\\Sub+mal\\missing30_s10_m10.csv")
-df4.to_csv("C:\\Users\\dexter\\Desktop\\Trust and Reputation\\New folder\\Dataset\\Sub+mal\\missing40_s10_m10.csv")
-df5.to_csv("C:\\Users\\dexter\\Desktop\\Trust and Reputation\\New folder\\Dataset\\Sub+mal\\missing50_s10_m10.csv")
+df1.to_csv("C:\\Users\\dexter\\Desktop\\Trust and Reputation\\New folder\\Dataset\\Sub+mal\\missing10_s25_m25.csv")  
+df2.to_csv("C:\\Users\\dexter\\Desktop\\Trust and Reputation\\New folder\\Dataset\\Sub+mal\\missing20_s25_m25.csv")
+df3.to_csv("C:\\Users\\dexter\\Desktop\\Trust and Reputation\\New folder\\Dataset\\Sub+mal\\missing30_s25_m25.csv")
+df4.to_csv("C:\\Users\\dexter\\Desktop\\Trust and Reputation\\New folder\\Dataset\\Sub+mal\\missing40_s25_m25.csv")
+df5.to_csv("C:\\Users\\dexter\\Desktop\\Trust and Reputation\\New folder\\Dataset\\Sub+mal\\missing50_s25_m25.csv")
