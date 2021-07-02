@@ -37,7 +37,7 @@ s2 = s.fillna(round(s.mean(),2))
 
 
 s.to_csv("C:\\Users\\dexter\\Desktop\\Trust and Reputation\\New folder\\Dataset\\Muvi\\mvi_lens_missing.csv")
-s2.to_csv("C:\\Users\\dexter\\Desktop\\Trust and Reputation\\New folder\\Dataset\\Muvi\\mvi_lens.csv")  
+s2.to_csv("C:\\Users\\dexter\\Desktop\\Trust and Reputation\\New folder\\Dataset\\Muvi\\mvi_lens_mean.csv")  
 print(s2.head())
 
 print("Creating Global Matrix!!!!")
