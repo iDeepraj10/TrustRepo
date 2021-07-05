@@ -1,96 +1,70 @@
-
-###############################################################
-#####RATING PREDICTION IN THE CONTEXT OF SERVICE DISCOVERY#####
-###############################################################
 import pandas as pd
 import numpy as np
-from scipy import sparse
-from scipy.spatial import distance
-from scipy import stats
-from sklearn.metrics.pairwise import cosine_similarity
-from sklearn.metrics.pairwise import euclidean_distances
-from numpy import dot
-from numpy.linalg import norm
 import csv
+import random
+from function import rating,loc_weight,glob_weight,predict_global,predict_local,similarity
 
 
-#function returns medium value of a service
-def median(service):
-    median_values = df.median()
-    x = median_values[service]
-    return x
 
-def rating(customer,service):
-    return df1[int(customer)][int(service)]
+df = pd.read_csv("C:\\Users\\dexter\\Desktop\\Trust and Reputation\\New folder\\Dataset\\Dataset\\matrix 4.2.1.csv")
 
 
-#function returns weight of a customer for specific service
-def weight(c,s):
-    Central_point = median(s)
-    #print(Central_point)
-    Rating = rating(c,s)
-    Weight = 1 - abs((Central_point - Rating))/10
-    #print(Weight," ",Central_point," ",Rating," of :",c," ",s)
-    return Weight
+#s.to_csv("C:\\Users\\dexter\\Desktop\\Trust and Reputation\\New folder\\Dataset\\mvi_lens.csv")  
 
-def predict(C,S):
-    W = weight(C,S)
-    R = rating(C,S)
-    M_rate = W * R 
-    #print(W," ",R," ",M_rate)
-    return M_rate
 
-df = pd.read_csv( "C:\\Users\\dexter\\Desktop\\Trust and Reputation\\New folder\\Dataset\\matrix4.1.csv")
-#print(df)
 
-df1 = np.array(df)
-
-#Customers with NaN values along with services
 M_ratings = np.argwhere(np.isnan(np.array(df)))
-print(M_ratings)
 
-#get similarity for two customers
-def similarity(c1,c2):
-    temp_set = []
-    count = -1
-    for i,j in zip(df1[c1],df1[c2]): 
-        count+=1  
-        if np.isnan(i) or np.isnan(j):
-            continue
-        temp_set.append(count)
+g_wg = {}                                           #create an empty dictionary to store global weights  
+df1 = np.array(df)                                  #convert pandas dataframe to np array
 
-    cmp_set1 = []
-    cmp_set2 = []
-    for i in temp_set:
-        cmp_set1.append(df1[c1][i])    
-        cmp_set2.append(df1[c2][i])
+print("Creating Global Matrix!!!!")
+glob_weight(df1)                                       #calulating global weights
+print("Global Weight Matrix created")               
+k =0.9                
 
-    cos_sim = np.corrcoef(cmp_set1, cmp_set2)
-    return cos_sim[0,1]  
-res = 0
-sum1 = 0
-for rate in M_ratings:
-    sim_mat = {}
-    for cus in df1:
-        x = similarity(rate[0],int(cus[0]))
-        sim_mat.update({cus[0] : x })
-    sim_cus =  dict(sorted(sim_mat.items(), key=lambda item: item[1]))
+
+
+M_ratings = np.argwhere(np.isnan(np.array(df)))     #Locations of NaN values
+#print(M_ratings)
+
+
+for rate in M_ratings:                              #iterate over nan locations
+    res_loc = 0
+    res_glo = 0
+    sum_loc = 0
+    sum_glo = 0
+    tot_sum = 0
+    sim_mat = {}                                    #empty dictionary for similarity matrix 
+    for cus in range(0,100):                                 #get the similarity for all user in M_ratings
+        x = similarity(df1,rate[0],cus)         #with every other user in the dataset   
+        sim_mat.update({cus : x })               #update the similarity scores in dictionary sim_mat
+    sim_cus =  dict(sorted(sim_mat.items(), key=lambda item: item[1] , reverse = True))      #sort the dictionary in descending order
+    del sim_cus[rate[0]]
     count = 0
-    for i in sim_cus:
-            count+=1
-            res = predict(i,rate[1])
-            if np.isnan(res):
+    print("Prediction ---> ",rate[0])
+    for i in sim_cus:                           #iterate over the sorted similar users upto count(count = 10)
+            res_loc = predict_local(df1,i,rate[1])
+            #print("Local prediction --->",res_loc)                              #predicting rate using user and service
+            res_glo = predict_global(df1,i,rate[1])
+            #print("Global prediction--->",res_glo)
+            if np.isnan(res_loc) or np.isnan(res_glo):                   #if rate is nan then ignore rest
+                #print("****ignore values****")
                 continue   
-            sum1 = sum1 + res     
-            #print('Rate of ',i,' is :',sum1," and count is : ",count)
+            sum_loc = sum_loc + res_loc
+            sum_glo = sum_glo + res_glo
+            count+=1
+            #print(i)     
+            #print("count is : ",count,"Sum of local-->",sum_loc,"Sum of global--->",sum_glo)
             if count >= 10:
                 break
-    sum1 = sum1/10
-    sum1 = round(sum1)
-    df1[rate[0]][rate[1]] = sum1
-    #print(rate[0]," ",rate[1]," ",sum1)
-    #print("----------------------------------------------------")
+    tot_sum = ((k*sum_loc/10) + (1-k)*sum_glo/10)
+    tot_sum = round(tot_sum,2)
+    
+    df1[rate[0]][rate[1]] = abs(tot_sum)
+    print(rate[0]," ",rate[1]," ",tot_sum)
+    print("-----------------------------------")
 
 
 print(pd.DataFrame(df1))
-pd.DataFrame(df1).to_csv("C:\\Users\\dexter\\Desktop\\Trust and Reputation\\New folder\\Dataset\\Predicted data\\Predicted_data4.1.csv")
+pd.DataFrame(df1).to_csv("C:\\Users\\dexter\\Desktop\\Trust and Reputation\\New folder\\Dataset\\Dataset\\Predicted Data 4.2.1.csv")
