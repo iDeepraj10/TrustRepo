@@ -3,44 +3,18 @@ import numpy as np
 import csv
 import random
 from Muvi.Master import rating,loc_weight,glob_weight,predict_global,predict_local,similarity
+from statistics import mean
+import math
 
-df = pd.read_csv("C:\\Users\\dexter\\Desktop\\Trust and Reputation\\New folder\\Dataset\\ratings.csv")
+actual = pd.read_csv("C:\\Users\\dexter\\Desktop\\Trust and Reputation\\New folder\\Dataset\\Result Analysis 1\\Muvi\\mvi_lens_imputed10.csv")
 
-df1= df.drop('timestamp',axis='columns')
-
-s=df1.pivot(*df1.columns)
-
-#s.to_csv("C:\\Users\\dexter\\Desktop\\Trust and Reputation\\New folder\\Dataset\\mvi_lens.csv")  
-
-s = s[s.columns[s.isnull().mean() < 0.9]]
-s = s.loc[s.isnull().mean(axis=1).lt(0.6)]
-#print(s.isnull().mean(axis=1))
+s1 = pd.read_csv("C:\\Users\\dexter\\Desktop\\Trust and Reputation\\New folder\\Dataset\\Result Analysis 1\\Muvi\\mvi_lens_missing10.csv")
 
 
-M_ratings = np.argwhere(np.isnan(np.array(s)))
-mis = len(M_ratings)
-tot = s.size
+print(actual)
+M_ratings = np.argwhere(np.isnan(np.array(s1)))
 
-#print("No. of missing values : ",mis)
-#print("Total size of data : ",s.size)
-#print(s.info())
-
-#res = (mis/tot) * 100
-
-s.columns =[ele for ele in range(0,317)]
-s.index =[ele for ele in range(0,68)]
-
-g_wg = {}                                           #create an empty dictionary to store global weights  
-s1 = np.array(s)                                  #convert pandas dataframe to np array
-
-
-s2 = s.fillna(round(s.mean(),2))
-
-
-s.to_csv("C:\\Users\\dexter\\Desktop\\Trust and Reputation\\New folder\\Dataset\\Muvi\\mvi_lens_missing.csv")
-s2.to_csv("C:\\Users\\dexter\\Desktop\\Trust and Reputation\\New folder\\Dataset\\Muvi\\mvi_lens_mean.csv")  
-print(s2.head())
-
+s1 = np.array(s1)
 print("Creating Global Matrix!!!!")
 glob_weight(s1)                                       #calulating global weights
 print("Global Weight Matrix created")               
@@ -48,7 +22,7 @@ k =0.25
 
 
 
-M_ratings = np.argwhere(np.isnan(np.array(s)))     #Locations of NaN values
+#M_ratings = np.argwhere(np.isnan(np.array(s)))     #Locations of NaN values
 #print(M_ratings)
 
 
@@ -90,10 +64,23 @@ for rate in M_ratings:                              #iterate over nan locations
 
 
 print(pd.DataFrame(s1))
-s1.to_csv("C:\\Users\\dexter\\Desktop\\Trust and Reputation\\New folder\\Dataset\\Muvi\\Predicted Data2.csv")
+pd.DataFrame(s1).to_csv("C:\\Users\\dexter\\Desktop\\Trust and Reputation\\New folder\\Dataset\\Result Analysis 1\\Muvi\\Predicted Data10.csv")
+print("Prediction done")
+actual = actual.drop(actual.columns[[0]], axis =1)
 
-predicted = pd.read_csv("C:\\Users\\dexter\\Desktop\\Trust and Reputation\\New folder\\Dataset\\Dataset\\Predicted Data2.csv")
+actual = np.array(actual)
 
-predicted = predicted.drop(predicted.columns[[0]], axis=1)
+rmse = []
+for rate in M_ratings:
+    x=np.square(np.subtract(actual[rate[0]][rate[1]],s1[rate[0]][rate[1]]))
+    print("Location : ",rate[0],"  ",rate[1])
+    print(x)
+    print(actual[rate[0]][rate[1]],"  ",s1[rate[0]][rate[1]])
+    print("-----------------------")
+    rmse.append(x)
 
-print(predicted)
+res = mean(rmse)
+
+rm_se = math.sqrt(res)
+
+print('RMSE Value : ',rm_se)

@@ -13,12 +13,12 @@ from numpy.linalg import norm
 import csv
 import math
 
-s1 = pd.read_csv("C:\\Users\\dexter\\Desktop\\Trust and Reputation\\New folder\\Dataset\\mvi_lens.csv")
+df = pd.read_csv("C:\\Users\\dexter\\Desktop\\Trust and Reputation\\New folder\\Dataset\\Final Result\\Muvi\\mvi_lens_missing.csv")
 g_wg = {} 
 
 
 #function returns medium value of a service
-median_values = s1.median()  #get median values for all services
+median_values = df.median()  #get median values for all services
 #print(median_values)
 
 
@@ -37,7 +37,7 @@ def loc_weight(df,c,s):
     Weight = 1 - abs((Central_point - Rating))/5
     #print(Weight," ",Central_point," ",Rating," of :",c," ",s)
     return Weight
-
+ 
 def glob_weight(df1):
     sum1 = 0
     count = 0
@@ -84,62 +84,3 @@ def similarity(df1,c1,c2):
 
     cos_sim = np.corrcoef(cmp_set1, cmp_set2)       #get the similarity between two users using pearson's coefficient
     return cos_sim[0,1]  
-"""
-#Load the dataset
-df = pd.read_csv( "C:\\Users\\dexter\\Desktop\\Trust and Reputation\\New folder\\Dataset\\matrix C.csv")
-#print(df)
- 
-                                          #create an empty dictionary to store global weights  
-df1 = np.array(df)                                  #convert pandas dataframe to np array
-glob_weight()                                       #calulating global weights
-print("Global Weight Matrix created")               
-k =0.25                
-
-
-
-M_ratings = np.argwhere(np.isnan(np.array(df)))     #Locations of NaN values
-#print(M_ratings)
-
-
-for rate in M_ratings:                              #iterate over nan locations
-    res_loc = 0
-    res_glo = 0
-    sum_loc = 0
-    sum_glo = 0
-    tot_sum = 0
-    sim_mat = {}                                    #empty dictionary for similarity matrix 
-    for cus in df1:                                 #get the similarity for all user in M_ratings
-        x = similarity(rate[0],int(cus[0]))         #with every other user in the dataset   
-        sim_mat.update({cus[0] : x })               #update the similarity scores in dictionary sim_mat
-    sim_cus =  dict(sorted(sim_mat.items(), key=lambda item: item[1] , reverse = True))      #sort the dictionary in descending order
-    del sim_cus[rate[0]]
-    count = 0
-    print("Prediction ---> ",rate[0])
-    for i in sim_cus:                           #iterate over the sorted similar users upto count(count = 10)
-            res_loc = predict_local(i,rate[1])
-            print("Local prediction --->",res_loc)                              #predicting rate using user and service
-            res_glo = predict_global(i,rate[1])
-            print("Global prediction--->",res_glo)
-            if np.isnan(res_loc) or np.isnan(res_glo):                   #if rate is nan then ignore rest
-                print("****ignore values****")
-                continue   
-            sum_loc = sum_loc + res_loc
-            sum_glo = sum_glo + res_glo
-            count+=1
-            print(i)     
-            print("count is : ",count,"Sum of local-->",sum_loc,"Sum of global--->",sum_glo)
-            if count >= 10:
-                break
-    tot_sum = ((k*sum_loc/10) + (1-k)*sum_glo/10)
-    tot_sum = round(tot_sum,2)
-    
-    df1[rate[0]][rate[1]] = tot_sum
-    print(rate[0]," ",rate[1]," ",tot_sum)
-    print("-----------------------------------")
-
-
-print(pd.DataFrame(df1))
-pd.DataFrame(df1).to_csv("C:\\Users\\dexter\\Desktop\\Trust and Reputation\\New folder\\Dataset\\Predicted data\\Predicted_data4.1.csv")
-
-
-"""

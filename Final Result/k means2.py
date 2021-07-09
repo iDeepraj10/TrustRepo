@@ -23,13 +23,15 @@ def find_clusters(X, n_clusters, rseed=2):
     
     return centers, labels
 
-df = pd.read_csv("C:\\Users\\dexter\\Desktop\\Trust and Reputation\\New folder\\Dataset\\matrix B.csv")
+df = pd.read_csv("C:\\Users\\dexter\\Desktop\\Trust and Reputation\\New folder\\Dataset\\Result Analysis 1\\Muvi\\mvi_lens_imputed10.csv")
 df = df.drop(df.columns[[0]], axis =1)
-
+#df = df.drop(df.columns[[0]], axis =1)
+print(df)
 y = [ele for ele in range(0,100)]
 X = df[df.columns[[0]]]
 
 centers, labels = find_clusters(X, 3)
+print(centers)
 plt.scatter(y, X, c=labels,
             s=50, cmap='viridis');
 

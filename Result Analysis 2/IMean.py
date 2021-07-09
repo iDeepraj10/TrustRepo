@@ -6,12 +6,12 @@ import math
 
 
 
-actual =  pd.read_csv( "C:\\Users\\dexter\\Desktop\\Trust and Reputation\\New folder\\Dataset\\matrix B.csv")
-df =  pd.read_csv( "C:\\Users\\dexter\\Desktop\\Trust and Reputation\\New folder\\Dataset\\matrix C.csv")
+actual =  pd.read_csv( "C:\\Users\\dexter\\Desktop\\Trust and Reputation\\New folder\\Dataset\\mvi_lens.csv")
+#df =  pd.read_csv( "C:\\Users\\dexter\\Desktop\\Trust and Reputation\\New folder\\Dataset\\matrix C.csv")
 
 
 actual = actual.drop(actual.columns[[0]], axis =1)
-M_ratings = np.argwhere(np.isnan(np.array(df)))
+M_ratings = [[2,10],[2,35],[2,36],[10,5],[10,16],[20,0],[10,20],[18,1],[18,2],[18,3],[18,8],[7,7],[7,9],[7,11]]
 print(M_ratings)
 predicted = actual
 
@@ -29,18 +29,16 @@ predicted = np.array(predicted)
 
 
 
-rmse = []
+mae = []
 for rate in M_ratings:
-	x=np.square(np.subtract(actual[rate[0]-1][rate[1]-1],predicted[rate[0]-1][rate[1]-1]))
+	x=abs(np.subtract(actual[rate[0]][rate[1]-1],predicted[rate[0]][rate[1]-1]))
 	print("Location : ",rate[0],"  ",rate[1])
 	print(x)
 	print(actual[rate[0]-1][rate[1]-1],"  ",predicted[rate[0]-1][rate[1]-1])
 	print("-----------------------")
-	rmse.append(x)
-print(rmse)
+	mae.append(x)
 
-res = mean(rmse)
 
-rm_se = math.sqrt(res)
+res = mean(mae)
 
-print('RMSE Value : ',rm_se)
+print('MAE Value by IMEAN: ',res)

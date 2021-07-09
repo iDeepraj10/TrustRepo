@@ -1,4 +1,1 @@
-# TrustRepo
-Predict missing rating
-
-Academic Project 
+In master.py , change the location in correspondence to your PC locations.

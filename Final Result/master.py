@@ -5,13 +5,13 @@ import random
 from function import rating,loc_weight,glob_weight,predict_global,predict_local,similarity
 
 
-
-df = pd.read_csv("C:\\Users\\dexter\\Desktop\\Trust and Reputation\\New folder\\Dataset\\Dataset\\matrix 4.2.1.csv")
+ 
+df = pd.read_csv("C:\\Users\\dexter\\Desktop\\Trust and Reputation\\New folder\\Dataset\\Result Analysis 1\\Muvi\\mvi_lens_missing.csv")
 
 
 #s.to_csv("C:\\Users\\dexter\\Desktop\\Trust and Reputation\\New folder\\Dataset\\mvi_lens.csv")  
 
-
+df = df.drop(df.columns[[0]], axis =1)
 
 M_ratings = np.argwhere(np.isnan(np.array(df)))
 
@@ -21,7 +21,7 @@ df1 = np.array(df)                                  #convert pandas dataframe to
 print("Creating Global Matrix!!!!")
 glob_weight(df1)                                       #calulating global weights
 print("Global Weight Matrix created")               
-k =0.9                
+k =0.10                
 
 
 
@@ -36,7 +36,7 @@ for rate in M_ratings:                              #iterate over nan locations
     sum_glo = 0
     tot_sum = 0
     sim_mat = {}                                    #empty dictionary for similarity matrix 
-    for cus in range(0,100):                                 #get the similarity for all user in M_ratings
+    for cus in range(0,68):                                 #get the similarity for all user in M_ratings
         x = similarity(df1,rate[0],cus)         #with every other user in the dataset   
         sim_mat.update({cus : x })               #update the similarity scores in dictionary sim_mat
     sim_cus =  dict(sorted(sim_mat.items(), key=lambda item: item[1] , reverse = True))      #sort the dictionary in descending order
@@ -56,9 +56,9 @@ for rate in M_ratings:                              #iterate over nan locations
             count+=1
             #print(i)     
             #print("count is : ",count,"Sum of local-->",sum_loc,"Sum of global--->",sum_glo)
-            if count >= 10:
+            if count >= 15:
                 break
-    tot_sum = ((k*sum_loc/10) + (1-k)*sum_glo/10)
+    tot_sum = ((k*sum_loc/15) + (1-k)*sum_glo/15)
     tot_sum = round(tot_sum,2)
     
     df1[rate[0]][rate[1]] = abs(tot_sum)
@@ -67,4 +67,4 @@ for rate in M_ratings:                              #iterate over nan locations
 
 
 print(pd.DataFrame(df1))
-pd.DataFrame(df1).to_csv("C:\\Users\\dexter\\Desktop\\Trust and Reputation\\New folder\\Dataset\\Dataset\\Predicted Data 4.2.1.csv")
+pd.DataFrame(df1).to_csv("C:\\Users\\dexter\\Desktop\\Trust and Reputation\\New folder\\Dataset\\Result Analysis 1\\Muvi\\Predicted Data_kmeans.csv")
