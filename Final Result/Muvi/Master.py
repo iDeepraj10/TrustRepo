@@ -54,17 +54,13 @@ def glob_weight(df1):
         g_wg.update({c1 : res})                     #adding the weight to a dictionary in a key-value format
     return 0     
 
-def predict_global(df,C,S):
+def predict(df,C,S,k):
     R = rating(df,C,S)
-    M_rate = g_wg[C]*R
+    g_w = g_wg[C]
+    l_w = loc_weight(df,C,S)
+    tot = ((k*l_w) + (1-k)*g_w) 
     #print(W," ",R," ",M_rate)
-    return M_rate
-
-def predict_local(df,C,S):
-    R = rating(df,C,S)
-    M_rate = loc_weight(df,C,S)*R 
-    #print(W," ",R," ",M_rate)
-    return M_rate
+    return tot * R
 
 #get similarity for two customers
 def similarity(df1,c1,c2):

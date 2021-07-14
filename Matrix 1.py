@@ -1,25 +1,25 @@
 import csv
+import pandas as pd
 
-with open('matrix A.csv','w', newline='', encoding='utf-8') as f:
-    writer = csv.writer(f)
-    count=1
+count=1
  
-    arr=[]
-    for i in range(101):
-        col = []
-        rate=1
-        for l in range(100):
-                col.append(rate)
-                if(i==0):
-                    rate=rate+1
-                    continue
-                if(count%10==0):
-                    rate=rate+1
-                count=count+1    
+arr=[]
+for i in range(100):
+    col = []
+    rate=1
+    for l in range(200):
+        # if(i==0):
+        #     col.append(rate)
+        #     rate=rate+1
+        #     continue
+        col.append(rate)
+        if(count%20==0):
+            rate=rate+1
+        count=count+1    
             
-        arr.append(col)
-    print(arr)
+    arr.append(col)
+print(arr)
 
-    writer.writerows(arr)
+pd.DataFrame(arr).to_csv("C:\\Users\\dexter\\Desktop\\Trust and Reputation\\New folder\\Dataset\\New_data\\matrix 1.csv")  
 
         

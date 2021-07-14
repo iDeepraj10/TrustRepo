@@ -2,7 +2,6 @@ import pandas as pd
 import numpy as np
 import csv
 import random
-from Muvi.Master import rating,loc_weight,glob_weight,predict_global,predict_local,similarity
 from statistics import mean
 import math
 

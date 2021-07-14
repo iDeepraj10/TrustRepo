@@ -2,7 +2,7 @@ import pandas as pd
 import numpy as np
 import csv
 import random
-from function import rating,loc_weight,glob_weight,predict_global,predict_local,similarity
+from function import rating,loc_weight,glob_weight,predict,similarity
 from statistics import mean
 import math
 
@@ -55,11 +55,8 @@ k =0.10
 
 
 for rate in M_ratings:                              #iterate over nan locations
-    res_loc = 0
-    res_glo = 0
-    sum_loc = 0
-    sum_glo = 0
-    tot_sum = 0
+    res = 0
+    sum_1 = 0
     sim_mat = {}                                    #empty dictionary for similarity matrix 
     for cus in range(0,68):                                 #get the similarity for all user in M_ratings
         x = similarity(s1,rate[0],cus)         #with every other user in the dataset   
@@ -69,22 +66,18 @@ for rate in M_ratings:                              #iterate over nan locations
     count = 0
     print("Prediction ---> ",rate[0])
     for i in sim_cus:                           #iterate over the sorted similar users upto count(count = 10)
-            res_loc = predict_local(s1,i,rate[1])
+            res = predict(s1,i,rate[1],k)
             #print("Local prediction --->",res_loc)                              #predicting rate using user and service
-            res_glo = predict_global(s1,i,rate[1])
-            #print("Global prediction--->",res_glo)
-            if np.isnan(res_loc) or np.isnan(res_glo):                   #if rate is nan then ignore rest
+            if np.isnan(res):                   #if rate is nan then ignore rest
                 #print("****ignore values****")
                 continue   
-            sum_loc = sum_loc + res_loc
-            sum_glo = sum_glo + res_glo
+            sum_1 = sum_1 + res
             count+=1
             #print(i)     
             #print("count is : ",count,"Sum of local-->",sum_loc,"Sum of global--->",sum_glo)
-            if count >= 20:
+            if count >= 15:
                 break
-    tot_sum = ((k*sum_loc/20) + (1-k)*sum_glo/20)
-    tot_sum = round(tot_sum,2)
+    tot_sum = round(sum_1/15,2)
     
     s1[rate[0]][rate[1]] = abs(tot_sum)
     print(rate[0]," ",rate[1]," ",tot_sum)
@@ -92,7 +85,7 @@ for rate in M_ratings:                              #iterate over nan locations
     
 
 print(pd.DataFrame(s1))
-pd.DataFrame(s1).to_csv("C:\\Users\\dexter\\Desktop\\Trust and Reputation\\New folder\\Dataset\\Result Analysis 1\\Muvi\\Predicted_on_observed.csv")
+pd.DataFrame(s1).to_csv("C:\\Users\\dexter\\Desktop\\Trust and Reputation\\New folder\\Dataset\\Final Result\\Predicted_on_observed.csv")
 
 print("Prediction done")
 rmse = []
