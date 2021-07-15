@@ -20,7 +20,7 @@ df = pd.read_csv("C:\\Users\\dexter\\Desktop\\Trust and Reputation\\New folder\\
 #function returns medium value of a service
 center_values = centroid.cen(df.drop(df.columns[[0]], axis =1))  #get k-means centroid values for all services
 #print(len(center_values))
-#print(median_values)
+print(center_values)
 
 
 

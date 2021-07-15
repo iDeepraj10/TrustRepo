@@ -24,10 +24,10 @@ print(M_ratings)
 
 mae = []
 for rate in M_ratings:
-	x=abs(np.subtract(actual[rate[0]][rate[1]-1],predicted[rate[0]][rate[1]-1]))
-	print("Location : ",rate[0],"  ",rate[1])
+	x=abs(np.subtract(actual[rate[0]-1][rate[1]-1],predicted[rate[0]-1][rate[1]-1]))
+	print("Location : ",rate[0]-1,"  ",rate[1])
 	print(x)
-	print(actual[rate[0]][rate[1]-1],"  ",predicted[rate[0]][rate[1]-1])
+	print(actual[rate[0]-1][rate[1]-1],"  ",predicted[rate[0]-1][rate[1]-1])
 	print("-----------------------")
 	mae.append(x)
 

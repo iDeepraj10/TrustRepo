@@ -7,6 +7,7 @@ from statistics import mean
 import math
 
 
+"""
 df = pd.read_csv("C:\\Users\\dexter\\Desktop\\Trust and Reputation\\New folder\\Dataset\\ratings.csv")
 
 df1= df.drop('timestamp',axis='columns')
@@ -17,7 +18,7 @@ s=df1.pivot(*df1.columns)
 s = s[s.columns[s.isnull().mean() < 0.9]]
 s = s.loc[s.isnull().mean(axis=1).lt(0.6)]
 #print(s.isnull().mean(axis=1))
- 
+
 
 M_ratings = []
 mis = len(M_ratings)
@@ -32,10 +33,15 @@ s.columns =[ele for ele in range(0,317)]
 s.index =[ele for ele in range(0,68)]
 s.to_csv("C:\\Users\\dexter\\Desktop\\Trust and Reputation\\New folder\\Dataset\\mvi_lens.csv")
 
+"""
+
+df = pd.read_csv("C:\\Users\\dexter\\Desktop\\Trust and Reputation\\New folder\\Dataset\\mvi_lens.csv")
+
+s= df.drop(df.columns[[0]],axis=1)
 g_wg = {}                                           #create an empty dictionary to store global weights  
 actual = np.array(s)                                  #convert pandas dataframe to np array
 s1 = np.array(s)
-M_ratings = [[2,10],[2,35],[2,36],[10,5],[10,16],[10,20],[18,1],[18,2],[18,3],[18,8],[7,7],[7,9],[7,11]]
+M_ratings = [[2,10],[2,35],[2,36],[10,5],[10,16],[10,20],[18,1],[18,2],[18,3],[18,8],[7,7],[7,9],[7,11],[20,0],[20,3],[20,5],[20,10],[24,3],[24,2],[24,5],[24,10],[30,1],[30,3],[30,31],[30,61],[62,2],[62,4],[62,8],[62,13]]
 
 l = len(M_ratings)
 print(l)
@@ -51,7 +57,7 @@ for i in M_ratings:
 print("Creating Global Matrix!!!!")
 glob_weight(s1)                                       #calulating global weights
 print("Global Weight Matrix created")               
-k =0.10  
+k = 0  
 
 for rate in M_ratings:                              #iterate over nan locations
     res = 0
@@ -61,7 +67,7 @@ for rate in M_ratings:                              #iterate over nan locations
         x = similarity(s1,rate[0],cus)         #with every other user in the dataset   
         sim_mat.update({cus : x })               #update the similarity scores in dictionary sim_mat
     sim_cus =  dict(sorted(sim_mat.items(), key=lambda item: item[1] , reverse = True))      #sort the dictionary in descending order
-    #del sim_cus[rate[0]]
+    del sim_cus[rate[0]]
     count = 0
     print("Prediction ---> ",rate[0])
     for i in sim_cus:                           #iterate over the sorted similar users upto count(count = 10)
@@ -84,7 +90,7 @@ for rate in M_ratings:                              #iterate over nan locations
     
 
 print(pd.DataFrame(s1))
-pd.DataFrame(s1).to_csv("C:\\Users\\dexter\\Desktop\\Trust and Reputation\\New folder\\Dataset\\Final Result\\Muvi\\Predicted_on_observed1.csv")
+pd.DataFrame(s1).to_csv("C:\\Users\\dexter\\Desktop\\Trust and Reputation\\New folder\\Dataset\\Final Result\\Predicted_on_observed1.csv")
 
 print("Prediction done")
 rmse = []
@@ -100,4 +106,4 @@ for rate in M_ratings:
 res = mean(rmse)
 
 #rm_se = math.sqrt(res)
-print('MAE Value using our model : ',res)
+print('MAE Value using our median model with k =',k,' is : ',res)

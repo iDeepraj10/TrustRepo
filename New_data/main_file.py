@@ -14,12 +14,6 @@ import csv
 import math
 
 
-#function returns medium value of a service
-def median(service):
-    median_values = df.median()  #get median values for all services
-    x = median_values[service]   #store median value for <service> in x
-    return x
-
 def rating(customer,service):
     #print(customer," ",service)
     return df1[int(customer)][int(service)]
@@ -27,7 +21,7 @@ def rating(customer,service):
 
 #function returns weight of a customer for specific service
 def loc_weight(c,s):
-    Central_point = median(s)       #get median of <s>
+    Central_point = median_values[s]   #store median value for <service> in x
     #print(Central_point)
     Rating = rating(c,s)            #return 
     Weight = 1 - abs((Central_point - Rating))/10
@@ -52,15 +46,11 @@ def glob_weight():
 
 def predict(C,S):
     R = rating(C,S)
-    print("Rating --> ",R)
-    if np.isnan(R):
-        return 0
-    else :
-        M_rate1 = g_wg[C]
-        M_rate2 = loc_weight(C,S)
-        tot = (((k*M_rate2) + (1-k)*M_rate1))
-        #print(W," ",R," ",M_rate)
-        return int(tot) * R
+    g_w = g_wg[C]
+    l_w = loc_weight(C,S)
+    tot = (k * l_w) + ((1-k)*g_w)
+    #print(W," ",R," ",M_rate)
+    return tot * R
 
 #get similarity for two customers
 def similarity(c1,c2):
@@ -84,12 +74,14 @@ def similarity(c1,c2):
 #Load the dataset
 df = pd.read_csv( "C:\\Users\\dexter\\Desktop\\Trust and Reputation\\New folder\\Dataset\\New_data\\matrix 2.1.1.csv")
 #print(df)
+
+median_values = df.median()  #get median values for all services
  
 g_wg = {}                                           #create an empty dictionary to store global weights  
 df1 = np.array(df)                                  #convert pandas dataframe to np array
 glob_weight()                                       #calulating global weights
 print("Global Weight Matrix created")               
-k =0.10              
+k = 1             
 
 
 M_ratings = np.argwhere(np.isnan(np.array(df)))     #Locations of NaN values
@@ -110,7 +102,7 @@ for rate in M_ratings:                              #iterate over nan locations
     for i in sim_cus:                           #iterate over the sorted similar users upto count(count = 10)
             res = predict(i,rate[1])
             print("Local prediction --->",res)                              #predicting rate using user and service               
-            if res == 0:
+            if np.isnan(res):
                 continue
             s = s + res
             count+=1

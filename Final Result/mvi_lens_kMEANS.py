@@ -6,7 +6,7 @@ from function import rating,loc_weight,glob_weight,predict,similarity
 from statistics import mean
 import math
 
-
+"""
 df = pd.read_csv("C:\\Users\\dexter\\Desktop\\Trust and Reputation\\New folder\\Dataset\\ratings.csv")
 
 df1= df.drop('timestamp',axis='columns')
@@ -32,6 +32,12 @@ s.columns =[ele for ele in range(0,317)]
 s.index =[ele for ele in range(0,68)]
 s.to_csv("C:\\Users\\dexter\\Desktop\\Trust and Reputation\\New folder\\Dataset\\mvi_lens.csv")
 
+"""
+
+df = pd.read_csv("C:\\Users\\dexter\\Desktop\\Trust and Reputation\\New folder\\Dataset\\mvi_lens.csv")
+
+s= df.drop(df.columns[[0]],axis=1)
+
 g_wg = {}                                           #create an empty dictionary to store global weights  
 actual = np.array(s)                                  #convert pandas dataframe to np array
 s1 = np.array(s)
@@ -51,7 +57,8 @@ for i in M_ratings:
 print("Creating Global Matrix!!!!")
 glob_weight(s1)                                       #calulating global weights
 print("Global Weight Matrix created")               
-k =0.10                
+k = 0
+                
 
 
 for rate in M_ratings:                              #iterate over nan locations
@@ -101,4 +108,4 @@ for rate in M_ratings:
 res = mean(rmse)
 
 #rm_se = math.sqrt(res)
-print('MAE Value using our model : ',res)
+print('MAE Value using our k-means model with k =',k,' is : ',res)
