@@ -2,7 +2,7 @@ import pandas as pd
 import numpy as np
 import csv
 import random
-from Muvi.Master import rating,loc_weight,glob_weight,predict,similarity
+from Muvi.Master1 import rating,loc_weight,glob_weight,predict,user_similarity
 from statistics import mean
 import math
 
@@ -13,7 +13,7 @@ df = pd.read_csv("C:\\Users\\dexter\\Desktop\\Trust and Reputation\\New folder\\
 df1= df.drop('timestamp',axis='columns')
 
 s=df1.pivot(*df1.columns)
-  
+    
 
 s = s[s.columns[s.isnull().mean() < 0.9]]
 s = s.loc[s.isnull().mean(axis=1).lt(0.6)]
@@ -41,7 +41,7 @@ s= df.drop(df.columns[[0]],axis=1)
 g_wg = {}                                           #create an empty dictionary to store global weights  
 actual = np.array(s)                                  #convert pandas dataframe to np array
 s1 = np.array(s)
-M_ratings = [[2,10],[2,35],[2,36],[10,5],[10,16],[10,20],[18,1],[18,2],[18,3],[18,8],[7,7],[7,9],[7,11],[20,0],[20,3],[20,5],[20,10],[24,3],[24,2],[24,5],[24,10],[30,1],[30,3],[30,31],[30,61],[62,2],[62,4],[62,8],[62,13]]
+M_ratings = [[2,10],[2,35],[2,36],[10,5],[10,16],[10,20],[18,1],[18,2],[18,3],[18,8],[7,7],[7,9],[7,11],[8,0],[8,1],[8,2],[8,3],[8,5],[8,7],[8,8]]
 
 l = len(M_ratings)
 print(l)
@@ -57,32 +57,35 @@ for i in M_ratings:
 print("Creating Global Matrix!!!!")
 glob_weight(s1)                                       #calulating global weights
 print("Global Weight Matrix created")               
-k = 0  
+k = 0
 
 for rate in M_ratings:                              #iterate over nan locations
     res = 0
     sum_1 = 0
+    sum_2 = 0
+    wg = 0
     sim_mat = {}                                    #empty dictionary for similarity matrix 
     for cus in range(0,68):                                 #get the similarity for all user in M_ratings
-        x = similarity(s1,rate[0],cus)         #with every other user in the dataset   
+        x = user_similarity(s1,rate[0],cus)         #with every other user in the dataset   
         sim_mat.update({cus : x })               #update the similarity scores in dictionary sim_mat
     sim_cus =  dict(sorted(sim_mat.items(), key=lambda item: item[1] , reverse = True))      #sort the dictionary in descending order
     del sim_cus[rate[0]]
     count = 0
     print("Prediction ---> ",rate[0])
     for i in sim_cus:                           #iterate over the sorted similar users upto count(count = 10)
-            res = predict(s1,i,rate[1],k)
+            res , wg = predict(s1,i,rate[1],k,sim_mat)
             #print("Local prediction --->",res_loc)                              #predicting rate using user and service
             if np.isnan(res):                   #if rate is nan then ignore rest
                 #print("****ignore values****")
                 continue   
             sum_1 = sum_1 + res
+            sum_2 = sum_2 + wg
             count+=1
             #print(i)     
             #print("count is : ",count,"Sum of local-->",sum_loc,"Sum of global--->",sum_glo)
             if count >= 15:
                 break
-    tot_sum = round(sum_1/15,2)
+    tot_sum = sum_1/sum_2
     
     s1[rate[0]][rate[1]] = abs(tot_sum)
     print(rate[0]," ",rate[1]," ",tot_sum)

@@ -55,10 +55,10 @@ def glob_weight(df1):
         g_wg.update({c1 : res})                     #adding the weight to a dictionary in a key-value format
     return 0     
 
-def predict(df,C,S,k):
+def predict(df,C,S,k,sim_mat):
     R = rating(df,C,S)
     g_w = g_wg[C]
-    l_w = loc_weight(df,C,S)
+    l_w = sim_mat.get(C)
     tot = ((k*l_w) + (1-k)*g_w) 
     #print(W," ",R," ",M_rate)
     return tot * R , tot

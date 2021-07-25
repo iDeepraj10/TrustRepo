@@ -52,17 +52,15 @@ def user_similarity(df1,c1,c2):
 
 df = pd.read_csv( "C:\\Users\\dexter\\Desktop\\Trust and Reputation\\New folder\\Dataset\\mvi_lens.csv")
 #print(df)
-
+df= df.drop(df.columns[[0]],axis=1)
 df1 = np.array(df)
 
 #Customers with NaN values along with services
-M_ratings = [[2,10],[2,35],[2,36],[10,5],[10,16],[10,20],[18,1],[18,2],[18,3],[18,8],[7,7],[7,9],[7,11]]
+M_ratings = [[2,10],[2,35],[2,36],[10,5],[10,16],[10,20],[18,1],[18,2],[18,3],[18,8],[7,7],[7,9],[7,11],[8,0],[8,1],[8,2],[8,3],[8,5],[8,7],[8,8]]
 print(M_ratings)
 
-
-
-
-
+for i in M_ratings:
+    df1[i[0]][i[1]] = None
 
 sim_user = {}
 for rate in M_ratings:
@@ -70,9 +68,9 @@ for rate in M_ratings:
     sum1 = 0
     sum2 = 0
     S=0
-    for cus in df1:
-        x = user_similarity(df1,rate[0],int(cus[0]))
-        sim_user.update({cus[0] : x })
+    for cus in range(0,68):
+        x = user_similarity(df1,rate[0],cus)
+        sim_user.update({cus : x })
     sim_cus =  dict(sorted(sim_user.items(), key=lambda item: item[1],reverse=True))
     count = 0
     del sim_cus[rate[0]]
@@ -89,7 +87,7 @@ for rate in M_ratings:
             #print(res1," ",sum1," ",count)
             #print(S," ",sum2," ",count)    
             #print("-------result considered-----------")
-            if count >= 20:
+            if count >= 15:
                 break
     f_sum = sum1/abs(sum2)
     #print(sum1,"+",sum2,"=",f_sum)

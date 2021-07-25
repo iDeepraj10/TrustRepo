@@ -50,34 +50,32 @@ def item_similarity(df1,i1,i2):
 
 
 
-df = pd.read_csv("C:\\Users\\dexter\\Desktop\\Trust and Reputation\\New folder\\Dataset\\mvi_lens.csv")
+df = pd.read_csv("C:\\Users\\dexter\\Desktop\\Trust and Reputation\\New folder\\Dataset\\New_data\\matrix 2.3.3.csv")
 #print(df)
-df= df.drop(df.columns[[0]],axis=1)
-df1 = np.array(df)
+
+#df = df.drop(df.columns[[0]], axis = 1)
 
 #Customers with NaN values along with services
-M_ratings = [[2,10],[2,35],[2,36],[10,5],[10,16],[10,20],[18,1],[18,2],[18,3],[18,8],[7,7],[7,9],[7,11],[8,0],[8,1],[8,2],[8,3],[8,5],[8,7],[8,8]]
+M_ratings = np.argwhere(np.isnan(np.array(df)))     #Locations of NaN values
 print(M_ratings)
 
-for i in M_ratings:
-    df1[i[0]][i[1]] = None
-
+df1 = np.array(df)
 sim_item = {}
 
 for rate in M_ratings:
-    for cus in range(0,68):
-        res1 =0
-        sum1 = 0
-        sum2 = 0
-        S=0
-        y = item_similarity(df1,rate[1],cus)
-        sim_item.update({cus : y })
+    res1 =0
+    sum1 = 0
+    sum2 = 0
+    S=0
+    for cus in df1:
+        y = item_similarity(df1,rate[1],int(cus[0]))
+        sim_item.update({cus[0] : y })
     sim_item = dict(sorted(sim_item.items(), key=lambda item: item[1],reverse =True))
     count = 0
-    del sim_item[rate[1]]
+    #del sim_item[rate[1]]
     for i in sim_item :
             #print("calling predict_item with ",i," and ",rate[1])
-            res2,S = predict_item(df1,i,rate[1])
+            res2,S = predict_item(df1,i,rate[1]-1)
             
             if np.isnan(res2) or i==0:
                 #print("***********Result Ignored*************")
@@ -86,11 +84,11 @@ for rate in M_ratings:
             sum1 = sum1 + abs(S)
             count+=1     
             #print("-------result considered-----------")
-            if count >= 15:
+            if count >= 20:
                 break
     f_sum = sum2/sum1
     pred = round(f_sum,2)
-    df1[rate[0]][rate[1]] = pred
+    df1[rate[0]][rate[1]-1] = pred
     print(rate[0]," ",rate[1]," = ",pred)
     print("----------------------------------")
 

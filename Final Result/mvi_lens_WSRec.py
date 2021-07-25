@@ -83,7 +83,7 @@ print(df)
 df1 = np.array(df)
 
 #Customers with NaN values along with services
-M_ratings = [[2,10],[2,35],[2,36],[10,5],[10,16],[10,20],[18,1],[18,2],[18,3],[18,8],[7,7],[7,9],[7,11]]
+M_ratings = [[2,10],[2,35],[2,36],[10,5],[10,16],[10,20],[18,1],[18,2],[18,3],[18,8],[7,7],[7,9],[7,11],[8,0],[8,1],[8,2],[8,3],[8,5],[8,7],[8,8]]
 print(M_ratings)
 
 
@@ -93,7 +93,7 @@ sim_user = {}
 sim_item = {}
 
 for rate in M_ratings:
-    k = 0.90
+    k = 0.9
     res1 = 0
     res2 = 0
     sum1 = 0
@@ -125,11 +125,11 @@ for rate in M_ratings:
             Sim2 = Sim2 + abs(S2)
             count+=1     
             #print("-------result considered-----------")
-            if count >= 35 :
+            if count >= 25 :
                 break
     f_sum1 = sum1/Sim1
     f_sum2 = sum2/Sim2
-    pred = round(( k * f_sum1) + ((1-k)*f_sum2),2)
+    pred = ( k * f_sum1) + ((1-k)*f_sum2)
     df1[rate[0]][rate[1]] = pred
     print(rate[0]," ",rate[1]," = ",pred)
     print("----------------------------------")

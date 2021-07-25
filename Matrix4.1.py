@@ -32,9 +32,9 @@ for row, col in random.sample(ix, int(round(.1*len(ix)))):
         count = 10                                    
     df.iat[row, col] = random.choice([ele for ele in range(count-2,count+3) if ele <11 if ele >0])
 
-#df.to_csv("C:\\Users\\dexter\\Desktop\\Trust and Reputation\\New folder\\Dataset\\New_data\\matrix 2.5.csv")
+df.to_csv("C:\\Users\\dexter\\Desktop\\Trust and Reputation\\New folder\\Dataset\\New_data\\matrix 2.1.csv")
 
-df1 = df.mask(np.random.random(df.shape) < .5)
+df1 = df.mask(np.random.random(df.shape) < .1)
 print(df1)
 
-df1.to_csv("C:\\Users\\dexter\\Desktop\\Trust and Reputation\\New folder\\Dataset\\New_data\\matrix 2.5.5.csv")  
+df1.to_csv("C:\\Users\\dexter\\Desktop\\Trust and Reputation\\New folder\\Dataset\\New_data\\matrix 2.1.1.csv")  

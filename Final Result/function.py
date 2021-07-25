@@ -37,7 +37,7 @@ def loc_weight(df,c,s):
     Central_point = center_values[s-1]      #get median of <s>
     #print(Central_point," ---> for ",s-1)
     Rating = rating(df,c,s)            #return 
-    Weight = 1 - abs((Central_point - Rating))/5
+    Weight = 1 - abs((Central_point - Rating))/10
     #print(Weight," ",Central_point," ",Rating," of :",c," ",s)
     return Weight
 
@@ -64,7 +64,7 @@ def predict(df,C,S,k):
     l_w = loc_weight(df,C,S)
     tot = ((k*l_w) + (1-k)*g_w) 
     #print(W," ",R," ",M_rate)
-    return tot * R
+    return tot * R , tot
 
 #get similarity for two customers
 def similarity(df1,c1,c2):

@@ -14,7 +14,7 @@ actual = np.array(s1)
 
 s1 = np.array(s1)
 
-M_ratings = [[2,10],[2,35],[2,36],[10,5],[10,16],[20,0],[10,20],[18,1],[18,2],[18,3],[18,8],[7,7],[7,9],[7,11]]
+M_ratings = [[2,10],[2,35],[2,36],[10,5],[10,16],[10,20],[18,1],[18,2],[18,3],[18,8],[7,7],[7,9],[7,11],[8,0],[8,1],[8,2],[8,3],[8,5],[8,7],[8,8]]
 
 l = len(M_ratings)
 print(l)
@@ -24,16 +24,15 @@ for i in M_ratings:
     s1[i[0]][i[1]] = None
 
 
-#s1 = pd.DataFrame(s1).fillna(round(pd.DataFrame(s1).mean(axis=1),2))
-m = pd.DataFrame(s1).mean(axis=1)
-for i, col in enumerate(pd.DataFrame(s1)):
-    pd.DataFrame(s1).iloc[:, i] = pd.DataFrame(s1).iloc[:, i].fillna(m)
+s1 = pd.DataFrame(s1).fillna(round(pd.DataFrame(s1).mean(axis=1),2))
+# m = pd.DataFrame(s1).mean(axis=1)
+# for i, col in enumerate(pd.DataFrame(s1)):
+#     pd.DataFrame(s1).iloc[:, i] = pd.DataFrame(s1).iloc[:, i].fillna(m)
 
 
 print(pd.DataFrame(s1))
-s1 = pd.DataFrame(s1).drop(pd.DataFrame(s1).columns[[0]], axis =1)
-s1 = s1.drop(s1.columns[[0]], axis =1)
-s1.to_csv("C:\\Users\\dexter\\Desktop\\Trust and Reputation\\New folder\\Dataset\\Final Result\\Muvi\\movie_lens_imean.csv")
+#s1 = pd.DataFrame(s1).drop(pd.DataFrame(s1).columns[[0]], axis =1)
+pd.DataFrame(s1).to_csv("C:\\Users\\dexter\\Desktop\\Trust and Reputation\\New folder\\Dataset\\Predicted data\\movie_lens_imean.csv")
 
 s1 = np.array(s1)
 
